@@ -37,16 +37,7 @@
             include 'signUp.php';
         });
         $router->map('POST', '/uye-ol', function(){
-            $servername = "localhost";
-            $username = "root";
-            $pass = "";
-            $dbname = "deneme";
-            
-            $conn = mysqli_connect($servername, $username, $pass, $dbname);
-            
-            if (!$conn) {
-                die("Bağlantı hatası: " . mysqli_connect_error());
-            }
+
             if(isset($_POST['id']) && isset($_POST['pass']) && isset($_POST['firstname']) && isset($_POST['lastname']) && isset($_POST['job']) && isset($_POST['birthday']) && isset($_POST['sex'])) {
             $id = $_POST['id'];
             $pass = $_POST['pass'];
@@ -55,17 +46,23 @@
             $job = $_POST['job'];
             $birthday = $_POST['birthday'];
             $sex = $_POST['sex'];
-            
-            $sql = "INSERT INTO uyebilgileri (id, pass, firstname, lastname, job, birthday, sex)
-            VALUES ('$id', '$pass', '$firstname', '$lastname', '$job', '$birthday', '$sex')";
-            if (mysqli_query($conn, $sql)) {
-                header("Location: ");
-                exit();
             }
-            else{
-                echo "Hata: " . $sql . "<br>" . mysqli_error($conn);
-            }
-            }
+            try {
+                $db = new PDO("mysql:host=localhost;dbname=deneme", "root", "");
+           } catch ( PDOException $e ){
+                print $e->getMessage();
+           }
+           $query = $db->prepare("INSERT INTO uyeler SET
+            id = ?,
+            pass = ?,
+            firstname = ?
+            lastname = ?
+            job = ?
+            birthday = ?
+            sex = ?");
+            $insert = $query->execute(array(
+                $id, $pass, $firstname, $lastname, $job, $birthday, $sex
+            ));
             });
 
 
