@@ -27,7 +27,7 @@
             $result = mysqli_query($conn,$query);
             $row=mysqli_fetch_array($result);
             if($id==$row["id"] && $pass==$row["pass"]){
-                echo "Hoşgeldin". $row['ad'];
+                echo "Hoşgeldin ". $row['firstname'];
             }
             else{
                 echo "kullanıcı adı veya şifre yanlış";
