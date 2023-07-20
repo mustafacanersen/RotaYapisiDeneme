@@ -16,7 +16,7 @@
     
 
         $router->map('POST', '/uye-girisi', function(){
-            $servername = "localhost";
+         /* $servername = "localhost";
             $username = "root";
             $password = "";
             $dbname = "deneme";
@@ -25,14 +25,36 @@
             $conn = mysqli_connect($servername, $username, $password, $dbname);
             $query ="SELECT * FROM uyebilgileri WHERE id = '$id' ";
             $result = mysqli_query($conn,$query);
-            $row=mysqli_fetch_array($result);
-            if($id==$row["id"] && $pass==$row["pass"]){
+            $row=mysqli_fetch_array($result); 
+             if($id==$row["id"] && $pass==$row["pass"]){
                 echo "Hoşgeldin ". $row['firstname'];
             }
             else{
                 echo "kullanıcı adı veya şifre yanlış";
+            } */
+            $id = $_POST['id'];
+            $pass = $_POST['pass'];
+            try {
+                $db = new PDO("mysql:host=localhost;dbname=deneme", "root", "");
+                $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+           } catch ( PDOException $e ){
+                print $e->getMessage();
+           }
+           $sql = "SELECT * FROM uyebilgileri WHERE id = :id AND pass = :pass";
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $stmt->bindValue(':pass', $pass, PDO::PARAM_STR);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($result) {
+                $firstname = $result['firstname'];
+                echo "Hoşgeldin, " . $firstname;
+            } else {
+                echo "Kullanıcı bulunamadı";
             }
-        });
+          
+        }); 
         $router->map('GET', '/uye-ol', function(){
             include 'signUp.php';
         });
