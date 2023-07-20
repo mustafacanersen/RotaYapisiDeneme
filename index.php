@@ -9,7 +9,7 @@
             <input name="pass" placeholder="sifre"><br>
             <button type="submit">Giriş Yap</button>
         </form>
-        <a href="/uye-ol" >
+        <a href="signUp.php" >
         <button type="submit">Üye Ol</button>
         </a>';
     });
