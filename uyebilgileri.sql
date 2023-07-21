@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Anamakine: 127.0.0.1
--- Üretim Zamanı: 20 Tem 2023, 11:30:16
+-- Üretim Zamanı: 21 Tem 2023, 10:32:24
 -- Sunucu sürümü: 10.4.28-MariaDB
 -- PHP Sürümü: 8.2.4
 
@@ -28,22 +28,35 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `uyebilgileri` (
-  `id` varchar(50) DEFAULT NULL,
-  `pass` varchar(50) DEFAULT NULL,
-  `firstname` varchar(50) DEFAULT NULL,
-  `lastname` varchar(50) DEFAULT NULL,
-  `job` varchar(50) DEFAULT NULL,
-  `birthday` date DEFAULT NULL,
-  `sex` varchar(255) DEFAULT NULL
+  `id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `pass` varchar(50) NOT NULL,
+  `firstname` varchar(50) NOT NULL,
+  `lastname` varchar(50) NOT NULL,
+  `job` varchar(50) NOT NULL,
+  `birthday` date NOT NULL,
+  `sex` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Tablo döküm verisi `uyebilgileri`
+-- Dökümü yapılmış tablolar için indeksler
 --
 
-INSERT INTO `uyebilgileri` (`id`, `pass`, `firstname`, `lastname`, `job`, `birthday`, `sex`) VALUES
-('mcan48', '123456', 'Mustafa Can', 'Ersen', 'Yazılımcı', '2023-07-01', 'Erkek'),
-('mce35', '159753', 'Can', 'Yılmaz', 'Tasarımcı', '2023-07-01', 'Erkek');
+--
+-- Tablo için indeksler `uyebilgileri`
+--
+ALTER TABLE `uyebilgileri`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Dökümü yapılmış tablolar için AUTO_INCREMENT değeri
+--
+
+--
+-- Tablo için AUTO_INCREMENT değeri `uyebilgileri`
+--
+ALTER TABLE `uyebilgileri`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
