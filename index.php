@@ -9,8 +9,11 @@
         <input name="pass" placeholder="sifre"><br>
         <button type="submit">Giriş Yap</button>
         </form>
-        <a href="signUp.php" >
+        <a href="/RotaYapisi/uye-ol" >
         <button type="submit">Üye Ol</button>
+        </a>
+        <a href="/RotaYapisi/sifre-degistir" >
+        <button type="submit">Şifremi Değiştir</button>
         </a>';
     });
     
@@ -94,6 +97,24 @@
             $id = $db->insert ('uyebilgileri', $data);
             if($id)
                 echo 'user was created. id=' . $id;
+            });
+            $router->map('GET','/sifre-degistir',function(){
+                echo '<form action="" method="POST">
+                <input name="username" placeholder="kullanıcı adı"><br>
+                <input name="pass" placeholder="şifre"><br>
+                <input name="newPass" placeholder="yeni şifre"><br>
+                <button type="submit">Şifremi değiştir</button>';
+            });
+            $router->map('POST','/sifre-degistir',function(){
+                $username = $_POST['username'];
+                $pass = $_POST['pass'];
+                $newPass = $_POST['newPass'];
+                $db = new MysqliDb ('localhost', 'root', '', 'deneme');
+                $db->where('username', $username)->where('pass', $pass)->update('uyebilgileri', ['pass' => $newPass]);
+                if ($db->getLastErrno() === 0)
+                    echo 'Güncelleme başarılı';
+                else
+                    echo 'Güncellleme başarısız. Hata: '. $db->getLastError();
             });
 
 
