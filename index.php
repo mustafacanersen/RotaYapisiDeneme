@@ -74,9 +74,9 @@
             $db->where("username", $username);
             $db->where("pass", $pass);
             if($db->has("uyebilgileri")) {
-                return "Giriş Başarılı";
+                echo "Giriş başarılı";
             } else {
-                return "Kullanıcı adı veya şifre yanlış";
+                echo "kullanıcı bulunamadı";
             }
           
         }); 
