@@ -57,6 +57,7 @@
             $pass = $_POST['pass'];
             $db = new MysqliDb ('localhost', 'root', '', 'deneme');
             $db->where ("username", $username);
+            $db->where("pass", $pass);
             $uyebilgileri = $db->getOne ("uyebilgileri");
             if ($db->count > 0){
                 echo "Hoşgeldin " . $uyebilgileri['firstname'];
