@@ -32,7 +32,7 @@
             else{
                 echo "kullanıcı adı veya şifre yanlış";
             } */
-            $username = $_POST['username'];
+          /*  $username = $_POST['username'];
             $pass = $_POST['pass'];
             try {
                 $db = new PDO("mysql:host=localhost;dbname=deneme", "root", "");
@@ -52,7 +52,19 @@
                 echo "Hoşgeldin, " . $firstname;
             } else {
                 echo "Kullanıcı bulunamadı";
+            } */
+            $username = $_POST['username'];
+            $pass = $_POST['pass'];
+            $db = new MysqliDb ('localhost', 'root', '', 'deneme');
+            $db->where ("username", $username);
+            $uyebilgileri = $db->getOne ("uyebilgileri");
+            if ($db->count > 0){
+                echo "Hoşgeldin " . $uyebilgileri['firstname'];
             }
+            else{
+                echo "kullanıcı bulunamadı";
+            }
+
           
         }); 
         $router->map('GET', '/uye-ol', function(){
@@ -69,7 +81,7 @@
             $birthday = $_POST['birthday'];
             $sex = $_POST['sex'];
             }
-            $db = new Mysqlusernameb ('localhost', 'root', '', 'deneme');
+            $db = new MysqliDb ('localhost', 'root', '', 'deneme');
             $data = Array ("username" => $username,
                 "pass" => $pass,
                "firstName" => $firstname,
@@ -78,9 +90,9 @@
                "birthday" => $birthday,
                "sex" => $sex
             );
-            $username = $db->insert ('uyebilgileri', $data);
-            if($username)
-                echo 'user was created. username=' . $username;
+            $id = $db->insert ('uyebilgileri', $data);
+            if($id)
+                echo 'user was created. id=' . $id;
             });
 
 
