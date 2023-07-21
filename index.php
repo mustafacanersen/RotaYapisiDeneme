@@ -5,7 +5,7 @@
     
     $router->map( 'GET', '/uye-girisi', function(){
         echo '<form action="" method="POST">
-        <input name="id" placeholder="kullanıcı adı"><br>
+        <input name="username" placeholder="kullanıcı adı"><br>
         <input name="pass" placeholder="sifre"><br>
         <button type="submit">Giriş Yap</button>
         </form>
@@ -20,19 +20,19 @@
             $username = "root";
             $password = "";
             $dbname = "deneme";
-            $id = $_POST['id'];
+            $username = $_POST['username'];
             $pass = $_POST['pass'];
             $conn = mysqli_connect($servername, $username, $password, $dbname);
-            $query ="SELECT * FROM uyebilgileri WHERE id = '$id' ";
+            $query ="SELECT * FROM uyebilgileri WHERE username = '$username' ";
             $result = mysqli_query($conn,$query);
             $row=mysqli_fetch_array($result); 
-             if($id==$row["id"] && $pass==$row["pass"]){
+             if($username==$row["username"] && $pass==$row["pass"]){
                 echo "Hoşgeldin ". $row['firstname'];
             }
             else{
                 echo "kullanıcı adı veya şifre yanlış";
             } */
-            $id = $_POST['id'];
+            $username = $_POST['username'];
             $pass = $_POST['pass'];
             try {
                 $db = new PDO("mysql:host=localhost;dbname=deneme", "root", "");
@@ -40,9 +40,9 @@
            } catch ( PDOException $e ){
                 print $e->getMessage();
            }
-           $sql = "SELECT * FROM uyebilgileri WHERE id = :id AND pass = :pass";
+           $sql = "SELECT * FROM uyebilgileri WHERE username = :username AND pass = :pass";
             $stmt = $db->prepare($sql);
-            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $stmt->bindValue(':username', $username, PDO::PARAM_INT);
             $stmt->bindValue(':pass', $pass, PDO::PARAM_STR);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -60,8 +60,8 @@
         });
         $router->map('POST', '/uye-ol', function(){
 
-            if(isset($_POST['id']) && isset($_POST['pass']) && isset($_POST['firstname']) && isset($_POST['lastname']) && isset($_POST['job']) && isset($_POST['birthday']) && isset($_POST['sex'])) {
-            $id = $_POST['id'];
+            if(isset($_POST['username']) && isset($_POST['pass']) && isset($_POST['firstname']) && isset($_POST['lastname']) && isset($_POST['job']) && isset($_POST['birthday']) && isset($_POST['sex'])) {
+            $username = $_POST['username'];
             $pass = $_POST['pass'];
             $firstname = $_POST['firstname'];
             $lastname = $_POST['lastname'];
@@ -69,22 +69,18 @@
             $birthday = $_POST['birthday'];
             $sex = $_POST['sex'];
             }
-            try {
-                $db = new PDO("mysql:host=localhost;dbname=deneme", "root", "");
-           } catch ( PDOException $e ){
-                print $e->getMessage();
-           }
-           $query = $db->prepare("INSERT INTO uyeler SET
-            id = ?,
-            pass = ?,
-            firstname = ?
-            lastname = ?
-            job = ?
-            birthday = ?
-            sex = ?");
-            $insert = $query->execute(array(
-                $id, $pass, $firstname, $lastname, $job, $birthday, $sex
-            ));
+            $db = new Mysqlusernameb ('localhost', 'root', '', 'deneme');
+            $data = Array ("username" => $username,
+                "pass" => $pass,
+               "firstName" => $firstname,
+               "lastName" => $lastname,
+               "job" => $job,
+               "birthday" => $birthday,
+               "sex" => $sex
+            );
+            $username = $db->insert ('uyebilgileri', $data);
+            if($username)
+                echo 'user was created. username=' . $username;
             });
 
 

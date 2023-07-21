@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="wusernameth=device-wusernameth, initial-scale=1.0">
     <title>Document</title>
 </head>
 <body>
 <form action="" method="POST">
-            <input name="id" placeholder="kullanıcı adı"><br>
+            <input name="username" placeholder="kullanıcı adı"><br>
             <input name="pass" placeholder="sifre"><br>
             <input name="firstname" placeholder="ad"><br>
             <input name="lastname" placeholder="soyad"><br>
@@ -29,8 +29,8 @@ $conn = mysqli_connect($servername, $username, $pass, $dbname);
 if (!$conn) {
     die("Bağlantı hatası: " . mysqli_connect_error());
 }
-if(isset($_POST['id']) && isset($_POST['pass']) && isset($_POST['firstname']) && isset($_POST['lastname']) && isset($_POST['job']) && isset($_POST['birthday']) && isset($_POST['sex'])) {
-$id = $_POST['id'];
+if(isset($_POST['username']) && isset($_POST['pass']) && isset($_POST['firstname']) && isset($_POST['lastname']) && isset($_POST['job']) && isset($_POST['birthday']) && isset($_POST['sex'])) {
+$username = $_POST['username'];
 $pass = $_POST['pass'];
 $firstname = $_POST['firstname'];
 $lastname = $_POST['lastname'];
@@ -38,8 +38,8 @@ $job = $_POST['job'];
 $birthday = $_POST['birthday'];
 $sex = $_POST['sex'];
 
-$sql = "INSERT INTO uyebilgileri (id, pass, firstname, lastname, job, birthday, sex)
-VALUES ('$id', '$pass', '$firstname', '$lastname', '$job', '$birthday', '$sex')";
+$sql = "INSERT INTO uyebilgileri (username, pass, firstname, lastname, job, birthday, sex)
+VALUES ('$username', '$pass', '$firstname', '$lastname', '$job', '$birthday', '$sex')";
 if (mysqli_query($conn, $sql)) {
     header("Location: ");
     exit();
