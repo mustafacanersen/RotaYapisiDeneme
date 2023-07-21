@@ -19,7 +19,10 @@
     
 
         $router->map('POST', '/uye-girisi', function(){
-         /* $servername = "localhost";
+            $username = $_POST['username'];
+            $pass = $_POST['pass'];
+         /* İLK KULLANDIĞIM YÖNTEM
+            $servername = "localhost";
             $username = "root";
             $password = "";
             $dbname = "deneme";
@@ -35,8 +38,7 @@
             else{
                 echo "kullanıcı adı veya şifre yanlış";
             } */
-          /*  $username = $_POST['username'];
-            $pass = $_POST['pass'];
+          /*  İKİNCİ YÖNTEM PDO İLE
             try {
                 $db = new PDO("mysql:host=localhost;dbname=deneme", "root", "");
                 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -56,19 +58,26 @@
             } else {
                 echo "Kullanıcı bulunamadı";
             } */
-            $username = $_POST['username'];
-            $pass = $_POST['pass'];
+           /* ÜÇÜNCÜ YÖNTEM MySQLi KÜTÜPHANESİ İLE
             $db = new MysqliDb ('localhost', 'root', '', 'deneme');
             $db->where ("username", $username);
             $db->where("pass", $pass);
-            $uyebilgileri = $db->getOne ("uyebilgileri");
+           $uyebilgileri = $db->getOne ("uyebilgileri");
             if ($db->count > 0){
                 echo "Hoşgeldin " . $uyebilgileri['firstname'];
             }
             else{
                 echo "kullanıcı bulunamadı";
+            } */
+            // DÖRDÜNCÜ YÖNTEM MySQLi KÜTÜPHANESİ İLE HAS KULLANARAK
+            $db = new MysqliDb ('localhost', 'root', '', 'deneme');
+            $db->where("username", $username);
+            $db->where("pass", $pass);
+            if($db->has("uyebilgileri")) {
+                return "Giriş Başarılı";
+            } else {
+                return "Kullanıcı adı veya şifre yanlış";
             }
-
           
         }); 
         $router->map('GET', '/uye-ol', function(){
