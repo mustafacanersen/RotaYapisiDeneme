@@ -5,9 +5,9 @@
     
     $router->map( 'GET', '/uye-girisi', function(){
         echo '<form action="" method="POST">
-            <input name="id" placeholder="kullanıcı adı"><br>
-            <input name="pass" placeholder="sifre"><br>
-            <button type="submit">Giriş Yap</button>
+        <input name="id" placeholder="kullanıcı adı"><br>
+        <input name="pass" placeholder="sifre"><br>
+        <button type="submit">Giriş Yap</button>
         </form>
         <a href="signUp.php" >
         <button type="submit">Üye Ol</button>
