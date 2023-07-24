@@ -1,10 +1,11 @@
 <?php
+    ob_start();
+    session_start();
     require_once __DIR__.'/vendor/autoload.php';
     $router = new AltoRouter();
     $router->setBasePath('/RotaYapisi');
     
     $router->map( 'GET', '/uye-girisi', function(){
-        session_start();
         $_SESSION['login'] = false;
         if($_SESSION['login'] == true){
             header("Location:/RotaYapisi/uye-bilgileri");
@@ -82,7 +83,6 @@
             $db->where("pass", $pass);
             $uyebilgileri = $db->getOne ("uyebilgileri");
             if($db->has("uyebilgileri")) {
-                session_start();
                 $_SESSION['login'] = true;
                 echo "Adı: " . $uyebilgileri['firstname']. "<br>";
                 echo "Soyadı: " . $uyebilgileri['lastname']. "<br>";
@@ -152,7 +152,7 @@
                     echo 'Güncellleme başarısız. Hata: '. $db->getLastError();
             });
             $router->map('GET','/cikis-yap',function(){
-                session_start();
+                
                 session_unset();
                 session_destroy();
                 header("Location:/RotaYapisi/uye-girisi");
