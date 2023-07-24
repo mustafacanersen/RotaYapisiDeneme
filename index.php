@@ -102,6 +102,7 @@
             }
         }); 
         $router->map('GET', '/uye-bilgileri',function(){
+            if($_SESSION['login']==true){
                 echo "Adı: " . $_SESSION['firstname']. "<br>";
                 echo "Soyadı: " . $_SESSION['lastname']. "<br>";
                 echo "Meslek: " . $_SESSION['job']."<br>";
@@ -110,6 +111,10 @@
                 echo "<a href='/RotaYapisi/cikis-yap'>
                 <button>Çıkış Yap</button>
                 </a>";
+            }
+            else{
+                header("Location:/RotaYapisi/uye-girisi");
+            }
         });
         $router->map('GET', '/uye-ol', function(){
          echo   '<form action="" method="POST">
