@@ -1,13 +1,13 @@
-<?php
-    ob_start();
-    session_start();
-    $_SESSION['login'] = false;
+<?php ob_start(); session_start();
+
     require_once __DIR__.'/vendor/autoload.php';
     $router = new AltoRouter();
     $router->setBasePath('/RotaYapisi');
     
     $router->map( 'GET', '/uye-girisi', function(){
-        if($_SESSION['login'] == true){
+        $myIp = $_SERVER['REMOTE_ADDR'];
+        $myBrowser = $_SERVER['HTTP_USER_AGENT'];
+        if($_SESSION['login']??false == true && $myIp == $_SESSION['loginIP'] && $myBrowser == $_SESSION['userAgent']){
             header("Location:/RotaYapisi/uye-bilgileri");
         }
         else{
@@ -24,71 +24,30 @@
         </a>';
         }
     });
-    
-
         $router->map('POST', '/uye-bilgileri', function(){
-            $username = $_POST['username'];
-            $pass = $_POST['pass'];
-         /* İLK KULLANDIĞIM YÖNTEM
-            $servername = "localhost";
-            $username = "root";
-            $password = "";
-            $dbname = "deneme";
-            $username = $_POST['username'];
-            $pass = $_POST['pass'];
-            $conn = mysqli_connect($servername, $username, $password, $dbname);
-            $query ="SELECT * FROM uyebilgileri WHERE username = '$username' ";
-            $result = mysqli_query($conn,$query);
-            $row=mysqli_fetch_array($result); 
-             if($username==$row["username"] && $pass==$row["pass"]){
-                echo "Hoşgeldin ". $row['firstname'];
-            }
-            else{
-                echo "kullanıcı adı veya şifre yanlış";
-            } */
-          /*  İKİNCİ YÖNTEM PDO İLE
-            try {
-                $db = new PDO("mysql:host=localhost;dbname=deneme", "root", "");
-                $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-           } catch ( PDOException $e ){
-                print $e->getMessage();
-           }
-           $sql = "SELECT * FROM uyebilgileri WHERE username = :username AND pass = :pass";
-            $stmt = $db->prepare($sql);
-            $stmt->bindValue(':username', $username, PDO::PARAM_INT);
-            $stmt->bindValue(':pass', $pass, PDO::PARAM_STR);
-            $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $username = $_POST['username']??null;
+            $pass = md5($_POST['pass'])??null;
+            $db = new MysqliDb ('localhost', 'root', '', 'deneme');
 
-            if ($result) {
-                $firstname = $result['firstname'];
-                echo "Hoşgeldin, " . $firstname;
-            } else {
-                echo "Kullanıcı bulunamadı";
-            } */
-           /* ÜÇÜNCÜ YÖNTEM MySQLi KÜTÜPHANESİ İLE
-            $db = new MysqliDb ('localhost', 'root', '', 'deneme');
-            $db->where ("username", $username);
-            $db->where("pass", $pass);
-           $uyebilgileri = $db->getOne ("uyebilgileri");
-            if ($db->count > 0){
-                echo "Hoşgeldin " . $uyebilgileri['firstname'];
-            }
-            else{
-                echo "kullanıcı bulunamadı";
-            } */
-            // DÖRDÜNCÜ YÖNTEM MySQLi KÜTÜPHANESİ İLE HAS KULLANARAK
-            $db = new MysqliDb ('localhost', 'root', '', 'deneme');
             $db->where("username", $username);
             $db->where("pass", $pass);
-            $uyebilgileri = $db->getOne ("uyebilgileri");
-            $_SESSION['firstname']= $uyebilgileri['firstname'];
-            $_SESSION['lastname']= $uyebilgileri['lastname'];
-            $_SESSION['job']= $uyebilgileri['job'];
-            $_SESSION['birthday']= $uyebilgileri['birthday'];
-            $_SESSION['sex']= $uyebilgileri['sex'];
-            if($db->has("uyebilgileri")) {
+            if($db->has("uyebilgileri"))
+            {
+                // User IP. User-agent md5();
+                session_regenerate_id(true);
                 $_SESSION['login'] = true;
+                $_SESSION['loginIP'] = $_SERVER['REMOTE_ADDR'];
+                $_SESSION['userAgent'] = $_SERVER['HTTP_USER_AGENT'];
+                $db->where("username", $username);
+                $db->where("pass", $pass);
+                $uyebilgileri = $db->getOne("uyebilgileri");
+
+                $_SESSION['firstname']= $uyebilgileri['firstname'];
+                $_SESSION['lastname']= $uyebilgileri['lastname'];
+                $_SESSION['job']= $uyebilgileri['job'];
+                $_SESSION['birthday']= $uyebilgileri['birthday'];
+                $_SESSION['sex']= $uyebilgileri['sex'];
+                
                 echo "Adı: " . $_SESSION['firstname']. "<br>";
                 echo "Soyadı: " . $_SESSION['lastname']. "<br>";
                 echo "Meslek: " . $_SESSION['job']."<br>";
@@ -102,7 +61,7 @@
             }
         }); 
         $router->map('GET', '/uye-bilgileri',function(){
-            if($_SESSION['login']==true){
+            if($_SESSION['login']??false == true && $myIp == $_SESSION['loginIP'] && $myBrowser == $_SESSION['userAgent']){
                 echo "Adı: " . $_SESSION['firstname']. "<br>";
                 echo "Soyadı: " . $_SESSION['lastname']. "<br>";
                 echo "Meslek: " . $_SESSION['job']."<br>";
@@ -132,7 +91,7 @@
 
             if(isset($_POST['username']) && isset($_POST['pass']) && isset($_POST['firstname']) && isset($_POST['lastname']) && isset($_POST['job']) && isset($_POST['birthday']) && isset($_POST['sex'])) {
             $username = $_POST['username'];
-            $pass = $_POST['pass'];
+            $pass = md5($_POST['pass']);
             $firstname = $_POST['firstname'];
             $lastname = $_POST['lastname'];
             $job = $_POST['job'];
@@ -150,7 +109,7 @@
             );
             $id = $db->insert ('uyebilgileri', $data);
             if($id)
-                echo 'user was created. id=' . $id;
+                header("Location:/RotaYapisi/uye-girisi");
             });
             $router->map('GET','/sifre-degistir',function(){
                 echo '<form action="" method="POST">
@@ -161,8 +120,8 @@
             });
             $router->map('POST','/sifre-degistir',function(){
                 $username = $_POST['username'];
-                $pass = $_POST['pass'];
-                $newPass = $_POST['newPass'];
+                $pass = md5($_POST['pass']);
+                $newPass = md5($_POST['newPass']);
                 $db = new MysqliDb ('localhost', 'root', '', 'deneme');
                 $db->where('username', $username)->where('pass', $pass)->update('uyebilgileri', ['pass' => $newPass]);
                 if ($db->getLastErrno() === 0)
@@ -171,8 +130,6 @@
                     echo 'Güncellleme başarısız. Hata: '. $db->getLastError();
             });
             $router->map('GET','/cikis-yap',function(){
-                
-                session_unset();
                 session_destroy();
                 header("Location:/RotaYapisi/uye-girisi");
             });
