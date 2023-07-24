@@ -1,12 +1,12 @@
 <?php
     ob_start();
     session_start();
+    $_SESSION['login'] = false;
     require_once __DIR__.'/vendor/autoload.php';
     $router = new AltoRouter();
     $router->setBasePath('/RotaYapisi');
     
     $router->map( 'GET', '/uye-girisi', function(){
-        $_SESSION['login'] = false;
         if($_SESSION['login'] == true){
             header("Location:/RotaYapisi/uye-bilgileri");
         }
@@ -82,21 +82,35 @@
             $db->where("username", $username);
             $db->where("pass", $pass);
             $uyebilgileri = $db->getOne ("uyebilgileri");
+            $_SESSION['firstname']= $uyebilgileri['firstname'];
+            $_SESSION['lastname']= $uyebilgileri['lastname'];
+            $_SESSION['job']= $uyebilgileri['job'];
+            $_SESSION['birthday']= $uyebilgileri['birthday'];
+            $_SESSION['sex']= $uyebilgileri['sex'];
             if($db->has("uyebilgileri")) {
                 $_SESSION['login'] = true;
-                echo "Adı: " . $uyebilgileri['firstname']. "<br>";
-                echo "Soyadı: " . $uyebilgileri['lastname']. "<br>";
-                echo "Meslek: " . $uyebilgileri['job']."<br>";
-                echo "Doğum Günü: ". $uyebilgileri['birthday']."<br>";
-                echo "Cinsiyet: ". $uyebilgileri['sex']."<br>";
+                echo "Adı: " . $_SESSION['firstname']. "<br>";
+                echo "Soyadı: " . $_SESSION['lastname']. "<br>";
+                echo "Meslek: " . $_SESSION['job']."<br>";
+                echo "Doğum Günü: ". $_SESSION['birthday']."<br>";
+                echo "Cinsiyet: ". $_SESSION['sex']."<br>";
                 echo "<a href='/RotaYapisi/cikis-yap'>
                 <button>Çıkış Yap</button>
                 </a>";
             } else {
                 header("Location:/RotaYapisi/uye-girisi");
             }
-          
         }); 
+        $router->map('GET', '/uye-bilgileri',function(){
+                echo "Adı: " . $_SESSION['firstname']. "<br>";
+                echo "Soyadı: " . $_SESSION['lastname']. "<br>";
+                echo "Meslek: " . $_SESSION['job']."<br>";
+                echo "Doğum Günü: ". $_SESSION['birthday']."<br>";
+                echo "Cinsiyet: ". $_SESSION['sex']."<br>";
+                echo "<a href='/RotaYapisi/cikis-yap'>
+                <button>Çıkış Yap</button>
+                </a>";
+        });
         $router->map('GET', '/uye-ol', function(){
          echo   '<form action="" method="POST">
             <input name="username" placeholder="kullanıcı adı"><br>
