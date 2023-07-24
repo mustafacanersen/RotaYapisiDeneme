@@ -4,7 +4,13 @@
     $router->setBasePath('/RotaYapisi');
     
     $router->map( 'GET', '/uye-girisi', function(){
-        echo '<form action="" method="POST">
+        session_start();
+        $_SESSION['login'] = false;
+        if($_SESSION['login'] == true){
+            header("Location:/RotaYapisi/uye-bilgileri");
+        }
+        else{
+        echo '<form action="/RotaYapisi/uye-bilgileri" method="POST">
         <input name="username" placeholder="kullanıcı adı"><br>
         <input name="pass" placeholder="sifre"><br>
         <button type="submit">Giriş Yap</button>
@@ -15,10 +21,11 @@
         <a href="/RotaYapisi/sifre-degistir" >
         <button type="submit">Şifremi Değiştir</button>
         </a>';
+        }
     });
     
 
-        $router->map('POST', '/uye-girisi', function(){
+        $router->map('POST', '/uye-bilgileri', function(){
             $username = $_POST['username'];
             $pass = $_POST['pass'];
          /* İLK KULLANDIĞIM YÖNTEM
@@ -73,10 +80,20 @@
             $db = new MysqliDb ('localhost', 'root', '', 'deneme');
             $db->where("username", $username);
             $db->where("pass", $pass);
+            $uyebilgileri = $db->getOne ("uyebilgileri");
             if($db->has("uyebilgileri")) {
-                echo "Giriş başarılı";
+                session_start();
+                $_SESSION['login'] = true;
+                echo "Adı: " . $uyebilgileri['firstname']. "<br>";
+                echo "Soyadı: " . $uyebilgileri['lastname']. "<br>";
+                echo "Meslek: " . $uyebilgileri['job']."<br>";
+                echo "Doğum Günü: ". $uyebilgileri['birthday']."<br>";
+                echo "Cinsiyet: ". $uyebilgileri['sex']."<br>";
+                echo "<a href='/RotaYapisi/cikis-yap'>
+                <button>Çıkış Yap</button>
+                </a>";
             } else {
-                echo "kullanıcı bulunamadı";
+                header("Location:/RotaYapisi/uye-girisi");
             }
           
         }); 
@@ -133,6 +150,12 @@
                     echo 'Güncelleme başarılı';
                 else
                     echo 'Güncellleme başarısız. Hata: '. $db->getLastError();
+            });
+            $router->map('GET','/cikis-yap',function(){
+                session_start();
+                session_unset();
+                session_destroy();
+                header("Location:/RotaYapisi/uye-girisi");
             });
 
 
