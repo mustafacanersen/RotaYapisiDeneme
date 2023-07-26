@@ -11,17 +11,7 @@
             header("Location:/RotaYapisi/uye-bilgileri");
         }
         else{
-        echo '<form action="/RotaYapisi/uye-bilgileri" method="POST">
-        <input name="username" placeholder="kullanıcı adı"><br>
-        <input name="pass" placeholder="sifre"><br>
-        <button type="submit">Giriş Yap</button>
-        </form>
-        <a href="/RotaYapisi/uye-ol" >
-        <button type="submit">Üye Ol</button>
-        </a>
-        <a href="/RotaYapisi/sifre-degistir" >
-        <button type="submit">Şifremi Değiştir</button>
-        </a>';
+            require_once __DIR__.'/views/uye-girisi.view.php';
         }
     });
         $router->map('POST', '/uye-bilgileri', function(){
@@ -76,16 +66,7 @@
             }
         });
         $router->map('GET', '/uye-ol', function(){
-         echo   '<form action="" method="POST">
-            <input name="username" placeholder="kullanıcı adı"><br>
-            <input name="pass" placeholder="sifre"><br>
-            <input name="firstname" placeholder="ad"><br>
-            <input name="lastname" placeholder="soyad"><br>
-            <input name="job" placeholder="meslek"><br>
-            <input type="date" name="birthday" placeholder="doğum günü"><br>
-            <input name="sex" placeholder="cinsiyet"><br>
-            <button type="submit">Üye Ol</button>
-        </form>';
+            require_once __DIR__.'/views/uye-ol.view.php';
         });
         $router->map('POST', '/uye-ol', function(){
 
@@ -112,11 +93,7 @@
                 header("Location:/RotaYapisi/uye-girisi");
             });
             $router->map('GET','/sifre-degistir',function(){
-                echo '<form action="" method="POST">
-                <input name="username" placeholder="kullanıcı adı"><br>
-                <input name="pass" placeholder="şifre"><br>
-                <input name="newPass" placeholder="yeni şifre"><br>
-                <button type="submit">Şifremi değiştir</button>';
+                require_once __DIR__.'/views/sifre-degistir.view.php';
             });
             $router->map('POST','/sifre-degistir',function(){
                 $username = $_POST['username'];
