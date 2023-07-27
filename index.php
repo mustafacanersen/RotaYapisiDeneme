@@ -40,16 +40,8 @@
                 $_SESSION['citizenId']= $member['citizenId'];
                 $_SESSION['passportId']= $member['passportId'];
                 require_once __DIR__.'/views/bilet-satis.view.php';
-                $yunanistanLiman = '';
-                $query = $db->get('greece_port', null, 'portPoint');
-                foreach($query as $key => $row)
-                {
-                    $yunanistanLiman .= '<option value = "'.$row["portPoint"].'">'.$row["portPoint"].'</option>';
-                }
-                
-                echo "<a href='/RotaYapisi/cikis-yap'>
-                <button>Çıkış Yap</button>
-                </a>";
+                require_once __DIR__.'/views/ajax.view.php';
+
             } else {
                 header("Location:/RotaYapisi/uye-girisi");
             }
