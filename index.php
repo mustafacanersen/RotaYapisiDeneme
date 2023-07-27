@@ -34,15 +34,11 @@
 
                 $_SESSION['firstname']= $uyebilgileri['firstname'];
                 $_SESSION['lastname']= $uyebilgileri['lastname'];
-                $_SESSION['job']= $uyebilgileri['job'];
+      
                 $_SESSION['birthday']= $uyebilgileri['birthday'];
                 $_SESSION['sex']= $uyebilgileri['sex'];
                 
-                echo "Adı: " . $_SESSION['firstname']. "<br>";
-                echo "Soyadı: " . $_SESSION['lastname']. "<br>";
-                echo "Meslek: " . $_SESSION['job']."<br>";
-                echo "Doğum Günü: ". $_SESSION['birthday']."<br>";
-                echo "Cinsiyet: ". $_SESSION['sex']."<br>";
+
                 echo "<a href='/RotaYapisi/cikis-yap'>
                 <button>Çıkış Yap</button>
                 </a>";
@@ -52,11 +48,7 @@
         }); 
         $router->map('GET', '/uye-bilgileri',function(){
             if($_SESSION['login']??false == true && $myIp == $_SESSION['loginIP'] && $myBrowser == $_SESSION['userAgent']){
-                echo "Adı: " . $_SESSION['firstname']. "<br>";
-                echo "Soyadı: " . $_SESSION['lastname']. "<br>";
-                echo "Meslek: " . $_SESSION['job']."<br>";
-                echo "Doğum Günü: ". $_SESSION['birthday']."<br>";
-                echo "Cinsiyet: ". $_SESSION['sex']."<br>";
+
                 echo "<a href='/RotaYapisi/cikis-yap'>
                 <button>Çıkış Yap</button>
                 </a>";
@@ -70,12 +62,11 @@
         });
         $router->map('POST', '/uye-ol', function(){
 
-            if(isset($_POST['username']) && isset($_POST['pass']) && isset($_POST['firstname']) && isset($_POST['lastname']) && isset($_POST['job']) && isset($_POST['birthday']) && isset($_POST['sex'])) {
+            if(isset($_POST['username']) && isset($_POST['pass']) && isset($_POST['firstname']) && isset($_POST['lastname'])&& isset($_POST['birthday']) && isset($_POST['sex'])) {
             $username = $_POST['username'];
             $pass = md5($_POST['pass']);
             $firstname = $_POST['firstname'];
             $lastname = $_POST['lastname'];
-            $job = $_POST['job'];
             $birthday = $_POST['birthday'];
             $sex = $_POST['sex'];
             }
@@ -84,7 +75,7 @@
                 "pass" => $pass,
                "firstName" => $firstname,
                "lastName" => $lastname,
-               "job" => $job,
+
                "birthday" => $birthday,
                "sex" => $sex
             );
