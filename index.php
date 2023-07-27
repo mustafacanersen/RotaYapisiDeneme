@@ -40,7 +40,7 @@
                 $_SESSION['citizenId']= $member['citizenId'];
                 $_SESSION['passportId']= $member['passportId'];
                 require_once __DIR__.'/views/bilet-satis.view.php';
-                require_once __DIR__.'/views/ajax.view.php';
+
 
             } else {
                 header("Location:/RotaYapisi/uye-girisi");
@@ -100,6 +100,18 @@
             $router->map('GET','/cikis-yap',function(){
                 session_destroy();
                 header("Location:/RotaYapisi/uye-girisi");
+            });
+            $router->map('POST','/ajax',function(){
+                $nereden = "";
+                if (isset($_POST['nereden'])) {
+                $nereden = $_POST['nereden'];
+                }
+                $db->where ("r.tukeyPortId", "t.id");
+                $db->where ("r.greecePortId", "g.id");
+                $db->where ("g.portPoint", $nereden);
+                $portPoint = $db->getValue ("route r, turkey_port t, greece_port g", "t.portPoint", null);
+                foreach ($portPoint as $port)
+                echo'<option value = "'.$port.'">'.$port.'</option>';
             });
 
 

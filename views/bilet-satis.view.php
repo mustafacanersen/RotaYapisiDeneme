@@ -10,7 +10,7 @@
             $('#nereden').change(function(){
                 var nereden=$(this).val();
                 $.ajax({
-                    url:"ajax.view.php",
+                    url:"/RotaYapisi/ajax",
                     method:"POST",
                     data:{nereden:nereden},
                     dataType:"text",
@@ -47,7 +47,7 @@
             </optgroup>
             </select>
             <select name="nereye" id="nereye">
-                
+
             </select>
         </div>
     </div><br><br>
