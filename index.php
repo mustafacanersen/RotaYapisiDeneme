@@ -8,20 +8,20 @@
         $myIp = $_SERVER['REMOTE_ADDR'];
         $myBrowser = $_SERVER['HTTP_USER_AGENT'];
         if($_SESSION['login']??false == true && $myIp == $_SESSION['loginIP'] && $myBrowser == $_SESSION['userAgent']){
-            header("Location:/RotaYapisi/uye-bilgileri");
+            header("Location:/RotaYapisi/bilet-satis");
         }
         else{
             require_once __DIR__.'/views/uye-girisi.view.php';
         }
     });
-        $router->map('POST', '/uye-bilgileri', function(){
+        $router->map('POST', '/bilet-satis', function(){
             $username = $_POST['username']??null;
             $pass = md5($_POST['pass'])??null;
             $db = new MysqliDb ('localhost', 'root', '', 'deneme');
 
             $db->where("username", $username);
             $db->where("pass", $pass);
-            if($db->has("uyebilgileri"))
+            if($db->has("member"))
             {
                 // User IP. User-agent md5();
                 session_regenerate_id(true);
@@ -30,15 +30,23 @@
                 $_SESSION['userAgent'] = $_SERVER['HTTP_USER_AGENT'];
                 $db->where("username", $username);
                 $db->where("pass", $pass);
-                $uyebilgileri = $db->getOne("uyebilgileri");
-
-                $_SESSION['firstname']= $uyebilgileri['firstname'];
-                $_SESSION['lastname']= $uyebilgileri['lastname'];
-      
-                $_SESSION['birthday']= $uyebilgileri['birthday'];
-                $_SESSION['sex']= $uyebilgileri['sex'];
+                $member = $db->getOne("member");
+                $_SESSION['firstname']= $member['firstname'];
+                $_SESSION['lastname']= $member['lastname'];
+                $_SESSION['birthday']= $member['birthday'];
+                $_SESSION['sex']= $member['sex'];
+                $_SESSION['email']= $member['email'];
+                $_SESSION['tel']= $member['tel'];
+                $_SESSION['citizenId']= $member['citizenId'];
+                $_SESSION['passportId']= $member['passportId'];
+                require_once __DIR__.'/views/bilet-satis.view.php';
+                $yunanistanLiman = '';
+                $query = $db->get('greece_port', null, 'portPoint');
+                foreach($query as $key => $row)
+                {
+                    $yunanistanLiman .= '<option value = "'.$row["portPoint"].'">'.$row["portPoint"].'</option>';
+                }
                 
-
                 echo "<a href='/RotaYapisi/cikis-yap'>
                 <button>Çıkış Yap</button>
                 </a>";
@@ -46,7 +54,7 @@
                 header("Location:/RotaYapisi/uye-girisi");
             }
         }); 
-        $router->map('GET', '/uye-bilgileri',function(){
+        $router->map('GET', '/bilet-satis',function(){
             if($_SESSION['login']??false == true && $myIp == $_SESSION['loginIP'] && $myBrowser == $_SESSION['userAgent']){
 
                 echo "<a href='/RotaYapisi/cikis-yap'>
@@ -79,7 +87,7 @@
                "birthday" => $birthday,
                "sex" => $sex
             );
-            $id = $db->insert ('uyebilgileri', $data);
+            $id = $db->insert ('member', $data);
             if($id)
                 header("Location:/RotaYapisi/uye-girisi");
             });
@@ -91,7 +99,7 @@
                 $pass = md5($_POST['pass']);
                 $newPass = md5($_POST['newPass']);
                 $db = new MysqliDb ('localhost', 'root', '', 'deneme');
-                $db->where('username', $username)->where('pass', $pass)->update('uyebilgileri', ['pass' => $newPass]);
+                $db->where('username', $username)->where('pass', $pass)->update('member', ['pass' => $newPass]);
                 if ($db->getLastErrno() === 0)
                     echo 'Güncelleme başarılı';
                 else

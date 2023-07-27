@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Üye Girişi</title>
 </head>
 <body>
-<form action="/RotaYapisi/uye-bilgileri" method="POST">
+<form action="/RotaYapisi/bilet-satis" method="POST">
         <input name="username" placeholder="kullanıcı adı"><br>
         <input name="pass" placeholder="sifre"><br>
         <button type="submit">Giriş Yap</button>
