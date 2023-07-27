@@ -10,7 +10,7 @@
             $('#nereden').change(function(){
                 var nereden=$(this).val();
                 $.ajax({
-                    url:"/RotaYapisi/ajax",
+                    url: "<?php echo $router->generate('biletsatis.limangetir'); ?>",
                     method:"POST",
                     data:{nereden:nereden},
                     dataType:"text",
@@ -29,6 +29,7 @@
             <option value="" disabled selected>Nereden</option>
             <optgroup label= Yunanistan>
                 <?php
+                $db->groupBy('portPoint');
                 $query = $db->get('greece_port', null, 'portPoint');
                 foreach($query as $key => $row)
                 {
@@ -38,6 +39,7 @@
             </optgroup>
             <optgroup label= Türkiye>
                 <?php
+                $db->groupBy('portPoint');
                 $query = $db->get('turkey_port', null, 'portPoint');
                 foreach($query as $key => $row)
                 {
@@ -47,7 +49,7 @@
             </optgroup>
             </select>
             <select name="nereye" id="nereye">
-
+                <option value="" disabled selected>Nereye</option>
             </select>
         </div>
     </div><br><br>
