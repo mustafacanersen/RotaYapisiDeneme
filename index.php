@@ -133,7 +133,8 @@
    
         require_once __DIR__.'/views/sefer-ara.view.php';
     });
-    $router->map('POST', '/odeme-bilgileri', function(int $id) use ($db){
+    $router->map('GET', '/odeme-bilgileri/[i:id]', function(int $id) use ($db){
+        echo 'ID:'.$id;
         echo '<form action="/RotaYapisi/odeme" method="POST">
                 <input name="firstname" value="'.$_SESSION['firstname'].'">
                 <input name="lastname" value="'.$_SESSION['lastname'].'"><br>
