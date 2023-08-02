@@ -20,8 +20,6 @@
     $router->map('POST', '/bilet-satis', function() use ($db, $router){
         $username = $_POST['username']??null;
         $pass = md5($_POST['pass'])??null;
-        $db = new MysqliDb ('localhost', 'root', '', 'deneme');
-
         $db->where("username", $username);
         $db->where("pass", $pass);
         if($db->has("member"))
@@ -61,56 +59,139 @@
         }
     });
     $router->map('POST','/bilet-satis-limangetir',function() use ($db){
-        $nereden = "";
-        if(isset($_POST['nereden']))
-        {
-            $nereden = $_POST['nereden'];
-        }
+
+        $nereden = $_POST['nereden']??'';
         $db->setTrace(true);
-        $db->where("r.tukeyPortId = t.id");
-        $db->where("r.greecePortId = g.id");
-        $db->where("g.portPoint", $nereden);
-        $portPoint = $db->getValue("route r, turkey_port t, greece_port g", "DISTINCT(t.portPoint)", null);
-        if($db->count > 0){
-            foreach($portPoint as $key => $portPoint)
+        $db->where('id', $db->escape($nereden));
+        if($db->has('ports'))
+        {
+            $db->where('id', $db->escape($nereden));
+            $departurePort = $db->getOne('ports', 'id, country');
+            $db->where('r.departurePortId', $departurePort['id']);
+            $db->join('ports p', 'p.id = r.arrivalPortId', 'INNER');
+            $availablePorts = $db->get('route r', null, 'DISTINCT(p.portPoint), p.id');
+            if(is_array($availablePorts) && $availablePorts != NULL)
             {
-                echo '<option value = "'.$portPoint.'">'.$portPoint.'</option>';
+                foreach ($availablePorts as $key => $portPoint)
+                {
+                    echo '<option value="'.$portPoint["id"].'">'.$portPoint["portPoint"].'</option>';
+                }
             }
         }
-        else{
-            $db->where("r.tukeyPortId = t.id");
-            $db->where("r.greecePortId = g.id");
-            $db->where("t.portPoint", $nereden);
-            $portPoint = $db->getValue("route r, turkey_port t, greece_port g", "DISTINCT(g.portPoint)", null);
-            foreach($portPoint as $key => $portPoint)
-            {
-                echo '<option value = "'.$portPoint.'">'.$portPoint.'</option>';
-            }
+        else
+        {
+            echo '<option value="">Uygun Liman Yok</option>';
         }
         echo '<pre>', print_r($db->trace), '</pre>';
+        echo '<pre>', print_r($availablePorts), '</pre>';
         exit;
+
     }, 'biletsatis.limangetir');
+    $router->map('POST','/sefer-ara', function() use ($db, $router){
+        
+        $nereden = $_POST['nereden'];
+        $nereye = $_POST['nereye'];
+        $gidis = $_POST['gidis'];
+        $donus = $_POST['donus'];
+        $acikDonus = $_POST['acikDonus']??'0';
+        $yetiskin = $_POST['yetiskin'];
+        $cocuk = $_POST['cocuk'];
+        $bebek = $_POST['bebek'];
+        $_SESSION['toplamKisi'] = $yetiskin + $cocuk + $bebek;
+        $output = "";
+        $db->setTrace(true);
+        $db->join('ports dp', 'dp.id = dv.departurePointId', 'INNER');
+        $db->join('ports ap', 'ap.id = dv.arrivalPointId', 'INNER');
+        $db->join('ferries f', 'f.id = dv.ferryId', 'INNER');
+        $db->where('dv.date', $gidis);
+        $db->where('dv.departurePointId', $nereden);
+        $db->where('dv.arrivalPointId', $nereye);
+        $voyages = $db->get("dated_voyage dv", null, 'dv.*, f.ferryCompany, f.name, dp.portName AS departurePortName, ap.portName AS arrivalPortName, dp.portPoint AS departurePortPoint, ap.portPoint AS arrivalPortPoint'); 
+        foreach($voyages as $key => $voyage)
+        {
+            $departureDate = new DateTime($voyage['date'].' '.$voyage['time']);
+            $arrivalDate = new DateTime($voyage['date'].' '.$voyage['time']);
+            $arrivalDate->add(new DateInterval('PT' . $voyage['duration'] . 'M'));
+            $output .= '<tr>
+                            <td>'.$voyage['ferryCompany'].'</td>
+                            <td>'.$voyage['name'].'</td>
+                            <td>'.$voyage['departurePortPoint'].'<br>'.$voyage['departurePortName'].'</td>
+                            <td>'.$departureDate->format('d-m-Y H:i').'</td>
+                            <td>'.$voyage['duration'].'</td>
+                            <td>'.$arrivalDate->format('d-m-Y H:i'). '</td>
+                            <td>'.$voyage['arrivalPortPoint'].'<br>'.$voyage['arrivalPortName'].'</td>
+                            <td>'.$voyage['adultFee'].'</td>
+                            <td>'.$voyage['childFee'].'</td>
+                            <td>'.$voyage['babyFee'].'</td>
+                            <td>
+                                <a href="'.$router->generate('odeme-bilgileri', ['id' => $voyage['id'], 'yetiskin' => $yetiskin, 'cocuk' => $cocuk, 'bebek' => $bebek]).'"><button>Seç</button></a> 
+                            </td>
+                        </tr>';
+        }
+        echo '<pre>', print_r($db->trace), '</pre>';
+        echo '<pre>', print_r($voyages), '</pre>';
+   
+        require_once __DIR__.'/views/sefer-ara.view.php';
+    });
+    $router->map('POST', '/odeme-bilgileri', function(int $id) use ($db){
+        echo '<form action="/RotaYapisi/odeme" method="POST">
+                <input name="firstname" value="'.$_SESSION['firstname'].'">
+                <input name="lastname" value="'.$_SESSION['lastname'].'"><br>
+                <input name="email" value="'.$_SESSION['email'].'">
+                <input name="tel" value="'.$_SESSION['tel'].'"><br>
+                <input name="birthday" value="'.$_SESSION['birthday'].'">
+                <input name="sex" value="'.$_SESSION['sex'].'"><br>
+                <input name="citizenId" value="'.$_SESSION['citizenId'].'">
+                <input name="passportId" value="'.$_SESSION['passportId'].'"><br><br>
+                ';
+        if($_SESSION['toplamKisi']>1){
+            for($i = 1; $i<$_SESSION['toplamKisi']; $i++){
+                echo '<form>
+                <input name="firstname" placeholder="Ad">
+                <input name="lastname" placeholder="Soyad"><br>
+                <input name="email" placeholder="E-posta Adresi">
+                <input name="tel" placeholder="Telefon Numarası"><br>
+                <input name="birthday" placeholder="Doğum Günü">
+                <input name="sex" placeholder="Cinsiyet"><br>
+                <input name="citizenId" placeholder="TC kimlik Numarası">
+                <input name="passportId" placeholder="Pasaport Numarası"><br><br>';
+            }
+        }
+        echo '<button type="submit">Ödeme Yap</button>
+            </form><br>';
+        
+    }, 'odeme-bilgileri');
     $router->map('GET', '/uye-ol', function(){
         require_once __DIR__.'/views/uye-ol.view.php';
     });
-    $router->map('POST', '/uye-ol', function(){
+    $router->map('POST', '/uye-ol', function() use ($db){
 
-        if(isset($_POST['username']) && isset($_POST['pass']) && isset($_POST['firstname']) && isset($_POST['lastname'])&& isset($_POST['birthday']) && isset($_POST['sex'])) {
+        if(isset($_POST['username']) && isset($_POST['pass'])
+         && isset($_POST['firstname']) && isset($_POST['lastname'])
+         && isset($_POST['birthday']) && isset($_POST['sex'])
+         && isset($_POST['email']) && isset($_POST['tel'])
+         && isset($_POST['citizenId']) && isset($_POST['passportId'])){
             $username = $_POST['username'];
             $pass = md5($_POST['pass']);
             $firstname = $_POST['firstname'];
             $lastname = $_POST['lastname'];
             $birthday = $_POST['birthday'];
             $sex = $_POST['sex'];
+            $email = $_POST['email'];
+            $tel = $_POST['tel'];
+            $citizenId = $_POST['citizenId'];
+            $passportId = $_POST['passportId'];
         }
-        $db = new MysqliDb ('localhost', 'root', '', 'deneme');
         $data = Array ("username" => $username,
             "pass" => $pass,
             "firstName" => $firstname,
             "lastName" => $lastname,
-
             "birthday" => $birthday,
-            "sex" => $sex
+            "sex" => $sex,
+            "email" => $email,
+            "tel" => $tel,
+            "citizenId" => $citizenId,
+            "passportId" => $passportId
         );
         $id = $db->insert ('member', $data);
         if($id)

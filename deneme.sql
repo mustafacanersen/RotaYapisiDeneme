@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Anamakine: 127.0.0.1
--- Üretim Zamanı: 27 Tem 2023, 14:27:54
+-- Üretim Zamanı: 02 Ağu 2023, 11:54:33
 -- Sunucu sürümü: 10.4.28-MariaDB
 -- PHP Sürümü: 8.2.4
 
@@ -29,11 +29,56 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `dated_voyage` (
   `id` int(11) NOT NULL COMMENT 'kayıt numarası',
+  `departurePointId` int(11) NOT NULL COMMENT 'Kalkış Noktası Kayıt Numarası',
+  `arrivalPointId` int(11) NOT NULL COMMENT 'Varış Noktası Kayıt Numarası',
   `date` date NOT NULL COMMENT 'sefer tarihi',
   `time` time NOT NULL COMMENT 'sefer saati',
+  `duration` int(11) NOT NULL COMMENT 'Yolculuk Süresi',
+  `ferryId` int(11) NOT NULL COMMENT 'Feribot Kayıt Numarası',
   `quota` int(11) NOT NULL COMMENT 'sefer kontenjanı',
-  `voyageId` int(11) NOT NULL COMMENT 'Sefer kayıt numarası'
+  `adultFee` float NOT NULL COMMENT 'yetişkin ücreti',
+  `childFee` float NOT NULL COMMENT 'çocuk ücreti',
+  `babyFee` float NOT NULL COMMENT 'bebek ücreti'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Tablo döküm verisi `dated_voyage`
+--
+
+INSERT INTO `dated_voyage` (`id`, `departurePointId`, `arrivalPointId`, `date`, `time`, `duration`, `ferryId`, `quota`, `adultFee`, `childFee`, `babyFee`) VALUES
+(1, 6, 2, '2023-08-01', '09:00:00', 45, 16, 100, 17.5, 8.7, 2.5),
+(2, 6, 2, '2023-08-01', '09:00:00', 90, 6, 120, 15, 7.5, 2.5),
+(3, 7, 1, '2023-08-01', '08:45:00', 20, 8, 150, 15, 7.5, 2.5),
+(4, 8, 1, '2023-08-01', '09:15:00', 30, 9, 100, 16.5, 8.5, 2.5),
+(5, 7, 1, '2023-08-01', '09:15:00', 45, 10, 120, 13, 6.5, 2.5),
+(6, 8, 1, '2023-08-01', '17:00:00', 30, 11, 100, 16.5, 8.5, 2.5),
+(7, 1, 8, '2023-08-01', '18:00:00', 30, 9, 120, 16.5, 8.5, 2.5),
+(8, 1, 8, '2023-08-01', '10:20:00', 30, 11, 100, 16.5, 8.5, 2.5),
+(9, 1, 8, '2023-08-01', '17:30:00', 45, 10, 120, 13, 6.5, 2.5),
+(10, 1, 7, '2023-08-01', '17:30:00', 20, 8, 100, 15, 7.5, 2.5),
+(11, 2, 6, '2023-08-01', '18:00:00', 45, 16, 120, 17.5, 8.5, 2.5),
+(12, 2, 6, '2023-08-01', '18:00:00', 90, 6, 100, 15, 7.5, 2.5),
+(13, 9, 4, '2023-08-01', '09:20:00', 35, 1, 120, 20, 15, 10),
+(14, 9, 4, '2023-08-01', '09:20:00', 35, 2, 100, 20, 15, 10),
+(15, 9, 4, '2023-08-01', '09:20:00', 25, 3, 120, 22.5, 15, 10),
+(16, 9, 4, '2023-08-01', '19:00:00', 35, 4, 100, 20, 15, 10),
+(17, 9, 4, '2023-08-01', '19:00:00', 35, 2, 120, 20, 15, 10),
+(18, 9, 4, '2023-08-01', '19:00:00', 40, 5, 100, 20, 15, 10),
+(19, 4, 9, '2023-08-01', '08:30:00', 35, 4, 120, 20, 15, 10),
+(20, 4, 9, '2023-08-01', '18:00:00', 35, 1, 100, 20, 15, 10),
+(21, 4, 9, '2023-08-01', '08:00:00', 35, 2, 120, 20, 15, 10),
+(22, 4, 9, '2023-08-01', '08:00:00', 40, 5, 100, 20, 15, 10),
+(23, 4, 9, '2023-08-01', '18:00:00', 25, 3, 120, 22.5, 15, 10),
+(24, 10, 3, '2023-08-01', '08:45:00', 110, 12, 100, 27.5, 22.5, 2.5),
+(25, 3, 10, '2023-08-01', '17:00:00', 110, 12, 120, 27.5, 22.5, 2.5),
+(46, 11, 5, '2023-08-01', '08:30:00', 45, 13, 100, 20.5, 15.5, 1.5),
+(47, 5, 11, '2023-08-01', '18:15:00', 45, 13, 120, 20.5, 15.5, 1.5),
+(48, 12, 3, '2023-08-01', '09:15:00', 60, 14, 100, 42.5, 16, 2.5),
+(49, 3, 12, '2023-08-01', '17:00:00', 60, 14, 100, 42.5, 16, 2.5),
+(50, 12, 3, '2023-08-01', '17:00:00', 60, 14, 100, 42.5, 16, 2.5),
+(51, 3, 12, '2023-08-01', '09:00:00', 60, 14, 100, 42.5, 16, 2.5),
+(52, 13, 1, '2023-08-01', '09:00:00', 45, 10, 100, 13, 6.5, 2.5),
+(53, 1, 13, '2023-08-01', '18:15:00', 45, 10, 100, 13, 6.5, 2.5);
 
 -- --------------------------------------------------------
 
@@ -43,44 +88,31 @@ CREATE TABLE `dated_voyage` (
 
 CREATE TABLE `ferries` (
   `id` int(11) NOT NULL COMMENT 'kayıt numarası',
-  `name` int(11) NOT NULL COMMENT 'feribot adı',
-  `routeId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Tablo için tablo yapısı `ferry_companies`
---
-
-CREATE TABLE `ferry_companies` (
-  `id` int(11) NOT NULL COMMENT 'kayıt numarası',
-  `name` int(11) NOT NULL COMMENT 'firma adı',
-  `ferryId` int(11) NOT NULL COMMENT 'feribot kayıt numarası'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Tablo için tablo yapısı `greece_port`
---
-
-CREATE TABLE `greece_port` (
-  `id` int(11) NOT NULL COMMENT 'Yunanistan liman kayıt numarası',
-  `portPoint` varchar(50) NOT NULL COMMENT 'Yunanistan Liman Yeri',
-  `portName` varchar(50) NOT NULL COMMENT 'Yunanistan Liman Adı'
+  `name` varchar(50) NOT NULL COMMENT 'feribot adı',
+  `ferryCompany` varchar(50) NOT NULL COMMENT 'feribot şirketi adı'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Tablo döküm verisi `greece_port`
+-- Tablo döküm verisi `ferries`
 --
 
-INSERT INTO `greece_port` (`id`, `portPoint`, `portName`) VALUES
-(1, 'Kos', 'Kos Port'),
-(2, 'Midilli', 'Midilli Port'),
-(3, 'Rodos', 'Touristiko Port'),
-(4, 'Sakız', 'Chios Port'),
-(5, 'Samos', 'Vathi Port');
+INSERT INTO `ferries` (`id`, `name`, `ferryCompany`) VALUES
+(1, 'K.SEVKET IYIDERE', 'Turyol'),
+(2, 'F/B SAN NICOLAS', 'Sunrise'),
+(3, 'KATAMARAN H/S', 'Ertürk Lines'),
+(4, 'ARAÇLI FERİBOT / CHIOS', 'Turyol'),
+(5, 'ERTURK - 1', 'Ertürk Lines'),
+(6, 'ARAÇLI FERİBOT / LESVOS FOKAIA', 'Turyol'),
+(7, 'SEDA JALE (Açık Güverteli)', 'Jalem'),
+(8, 'SEA STAR MAKRİ', 'Tilos'),
+(9, 'BODRUM EXPRESS', 'Yeşil Marmaris'),
+(10, 'Gönül (Açık Güverteli)', 'Dentur'),
+(11, 'ASKANIA', 'Yeşil Marmaris'),
+(12, 'SEA STAR LİNDOS', 'Tilos'),
+(13, 'SEA STAR SAMOS', 'Tilos'),
+(14, 'KARTEPE', 'Yeşil Marmaris'),
+(16, 'HIZLI KATAMARAN', 'Jalem'),
+(17, 'SEA STAR RHODES', 'Tilos');
 
 -- --------------------------------------------------------
 
@@ -96,10 +128,10 @@ CREATE TABLE `member` (
   `lastname` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'soyad',
   `birthday` date NOT NULL COMMENT 'doğum tarihi',
   `sex` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'cinisiyet',
-  `email` int(255) NOT NULL COMMENT 'e-posta',
+  `email` varchar(255) NOT NULL COMMENT 'e-posta',
   `tel` int(10) NOT NULL COMMENT 'telefon numarası',
   `citizenId` int(11) NOT NULL COMMENT 'Tc kimlik numarası',
-  `passportId` int(9) NOT NULL COMMENT 'pasaport numarası'
+  `passportId` varchar(9) NOT NULL COMMENT 'pasaport numarası'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -107,7 +139,39 @@ CREATE TABLE `member` (
 --
 
 INSERT INTO `member` (`id`, `username`, `pass`, `firstname`, `lastname`, `birthday`, `sex`, `email`, `tel`, `citizenId`, `passportId`) VALUES
-(4, 'mcan35', 'e10adc3949ba59abbe56e057f20f883e', 'Mustafa Can', 'Ersen', '1996-08-25', 'Erkek', 0, 0, 0, 0);
+(6, 'mcan35', 'e10adc3949ba59abbe56e057f20f883e', 'Mustafa Can', 'Ersen', '1996-08-25', 'Erkek', 'mustafa.can.ersen@babursahturizm.com', 2147483647, 2147483647, 'U354762');
+
+-- --------------------------------------------------------
+
+--
+-- Tablo için tablo yapısı `ports`
+--
+
+CREATE TABLE `ports` (
+  `id` int(11) NOT NULL COMMENT 'Yunanistan liman kayıt numarası',
+  `portPoint` varchar(50) NOT NULL COMMENT 'Yunanistan Liman Yeri',
+  `portName` varchar(50) NOT NULL COMMENT 'Yunanistan Liman Adı',
+  `country` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Tablo döküm verisi `ports`
+--
+
+INSERT INTO `ports` (`id`, `portPoint`, `portName`, `country`) VALUES
+(1, 'Kos', 'Kos Port', 'el'),
+(2, 'Midilli', 'Midilli Port', 'el'),
+(3, 'Rodos', 'Touristiko Port', 'el'),
+(4, 'Sakız', 'Chios Port', 'el'),
+(5, 'Samos', 'Vathi Port', 'el'),
+(6, 'Ayvalık', 'Ayvalık Port', 'tr'),
+(7, 'Bodrum', 'Bodrum Kale Port', 'tr'),
+(8, 'Bodrum', 'Bodrum Cruise Port', 'tr'),
+(9, 'Çeşme', 'Ulusoy Port', 'tr'),
+(10, 'Fethiye', 'Fethiye Liman', 'tr'),
+(11, 'Kuşadası', 'Büyük Liman', 'tr'),
+(12, 'Marmaris', 'Marmaris Cruise Port', 'tr'),
+(13, 'Turgutreis', 'D-Marin Port', 'tr');
 
 -- --------------------------------------------------------
 
@@ -117,23 +181,31 @@ INSERT INTO `member` (`id`, `username`, `pass`, `firstname`, `lastname`, `birthd
 
 CREATE TABLE `route` (
   `id` int(11) NOT NULL COMMENT 'rota kayıt numarası',
-  `tukeyPortId` int(11) NOT NULL,
-  `greecePortId` int(11) NOT NULL
+  `departurePortId` int(11) NOT NULL COMMENT 'Kalkış Limanı ',
+  `arrivalPortId` int(11) NOT NULL COMMENT 'Varış Limanı'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Tablo döküm verisi `route`
 --
 
-INSERT INTO `route` (`id`, `tukeyPortId`, `greecePortId`) VALUES
-(4, 1, 2),
-(1, 2, 1),
-(2, 3, 1),
-(7, 4, 4),
-(5, 5, 3),
-(8, 6, 5),
-(6, 7, 3),
-(3, 8, 1);
+INSERT INTO `route` (`id`, `departurePortId`, `arrivalPortId`) VALUES
+(9, 6, 2),
+(10, 7, 1),
+(11, 8, 1),
+(12, 9, 4),
+(13, 10, 3),
+(14, 11, 5),
+(15, 12, 3),
+(16, 13, 1),
+(17, 1, 7),
+(18, 1, 8),
+(19, 1, 13),
+(20, 2, 6),
+(21, 3, 10),
+(22, 3, 12),
+(23, 4, 9),
+(24, 5, 11);
 
 -- --------------------------------------------------------
 
@@ -145,54 +217,12 @@ CREATE TABLE `sales` (
   `id` int(11) NOT NULL COMMENT 'satış kayıt numarası',
   `datedVoyageId` int(11) NOT NULL COMMENT 'tarihli seferin kayıt numarası',
   `numberOfAdults` int(11) NOT NULL COMMENT 'yetişkin sayısı',
-  `numberOfChilderen` int(11) NOT NULL COMMENT 'çocuk sayısı',
-  `numberOfBabies` int(11) NOT NULL COMMENT 'bebek sayısı',
+  `numberOfChilderen` int(11) DEFAULT NULL COMMENT 'çocuk sayısı',
+  `numberOfBabies` int(11) DEFAULT NULL COMMENT 'bebek sayısı',
   `totalFee` int(11) NOT NULL COMMENT 'toplam ucret',
   `voucher` int(11) NOT NULL COMMENT 'Voucher(sipariş) numarası',
+  `token` varchar(255) NOT NULL COMMENT 'Benzersiz satış kodu',
   `memberId` int(11) NOT NULL COMMENT 'üye bilgileri kayıt numarası'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Tablo için tablo yapısı `turkey_port`
---
-
-CREATE TABLE `turkey_port` (
-  `id` int(11) NOT NULL COMMENT 'Türkiye liman kayıt numarası',
-  `portPoint` varchar(50) NOT NULL COMMENT 'Türkiye liman yeri adı',
-  `portName` varchar(50) NOT NULL COMMENT 'Türkiye liman adı'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Tablo döküm verisi `turkey_port`
---
-
-INSERT INTO `turkey_port` (`id`, `portPoint`, `portName`) VALUES
-(1, 'Ayvalık', 'Ayvalık Port'),
-(2, 'Bodrum', 'Bodrum Kale Port'),
-(3, 'Bodrum', 'Bodrum Cruise Port'),
-(4, 'Çeşme', 'Ulusoy Port'),
-(5, 'Fethiye', 'Fethiye Liman'),
-(6, 'Kuşadası', 'Büyük Liman'),
-(7, 'Marmaris', 'Marmaris Cruise Port'),
-(8, 'Turgutreis', 'D-Marin Port');
-
--- --------------------------------------------------------
-
---
--- Tablo için tablo yapısı `voyages`
---
-
-CREATE TABLE `voyages` (
-  `id` int(11) NOT NULL COMMENT 'sefer kayıt numarası',
-  `departurePoint` varchar(50) NOT NULL COMMENT 'kalkış noktası',
-  `destinationPoint` varchar(50) NOT NULL COMMENT 'varış noktası',
-  `duration` int(11) NOT NULL COMMENT 'seyahat süresi',
-  `ferryId` int(11) NOT NULL COMMENT 'feribot kayıt numarası',
-  `adultFee` int(11) NOT NULL COMMENT 'yetişkin sefer ücreti',
-  `childFee` int(11) NOT NULL COMMENT 'çocuk ücret',
-  `babyFee` int(11) NOT NULL COMMENT 'bebek ücret'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -204,26 +234,14 @@ CREATE TABLE `voyages` (
 --
 ALTER TABLE `dated_voyage`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `voyageId` (`voyageId`);
+  ADD KEY `ferryId` (`ferryId`),
+  ADD KEY `departurePointId` (`departurePointId`,`arrivalPointId`),
+  ADD KEY `arrivalPointId` (`arrivalPointId`);
 
 --
 -- Tablo için indeksler `ferries`
 --
 ALTER TABLE `ferries`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `routeId` (`routeId`);
-
---
--- Tablo için indeksler `ferry_companies`
---
-ALTER TABLE `ferry_companies`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `ferryId` (`ferryId`);
-
---
--- Tablo için indeksler `greece_port`
---
-ALTER TABLE `greece_port`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -233,31 +251,28 @@ ALTER TABLE `member`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Tablo için indeksler `ports`
+--
+ALTER TABLE `ports`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Tablo için indeksler `route`
 --
 ALTER TABLE `route`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `tukeyPortId` (`tukeyPortId`,`greecePortId`);
+  ADD KEY `turkeyPortId` (`departurePortId`),
+  ADD KEY `greecePortId` (`arrivalPortId`);
 
 --
 -- Tablo için indeksler `sales`
 --
 ALTER TABLE `sales`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `memberId` (`memberId`),
-  ADD UNIQUE KEY `datedVoyageId` (`datedVoyageId`);
-
---
--- Tablo için indeksler `turkey_port`
---
-ALTER TABLE `turkey_port`
-  ADD PRIMARY KEY (`id`);
-
---
--- Tablo için indeksler `voyages`
---
-ALTER TABLE `voyages`
-  ADD PRIMARY KEY (`id`);
+  ADD UNIQUE KEY `token` (`token`),
+  ADD UNIQUE KEY `voucher` (`voucher`),
+  ADD KEY `datedVoyageId` (`datedVoyageId`,`memberId`),
+  ADD KEY `memberId` (`memberId`);
 
 --
 -- Dökümü yapılmış tablolar için AUTO_INCREMENT değeri
@@ -267,55 +282,37 @@ ALTER TABLE `voyages`
 -- Tablo için AUTO_INCREMENT değeri `dated_voyage`
 --
 ALTER TABLE `dated_voyage`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'kayıt numarası';
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'kayıt numarası', AUTO_INCREMENT=54;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `ferries`
 --
 ALTER TABLE `ferries`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'kayıt numarası';
-
---
--- Tablo için AUTO_INCREMENT değeri `ferry_companies`
---
-ALTER TABLE `ferry_companies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'kayıt numarası';
-
---
--- Tablo için AUTO_INCREMENT değeri `greece_port`
---
-ALTER TABLE `greece_port`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Yunanistan liman kayıt numarası', AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'kayıt numarası', AUTO_INCREMENT=18;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `member`
 --
 ALTER TABLE `member`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'kayıt numarası', AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'kayıt numarası', AUTO_INCREMENT=7;
+
+--
+-- Tablo için AUTO_INCREMENT değeri `ports`
+--
+ALTER TABLE `ports`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Yunanistan liman kayıt numarası', AUTO_INCREMENT=14;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `route`
 --
 ALTER TABLE `route`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'rota kayıt numarası', AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'rota kayıt numarası', AUTO_INCREMENT=25;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `sales`
 --
 ALTER TABLE `sales`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'satış kayıt numarası';
-
---
--- Tablo için AUTO_INCREMENT değeri `turkey_port`
---
-ALTER TABLE `turkey_port`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Türkiye liman kayıt numarası', AUTO_INCREMENT=9;
-
---
--- Tablo için AUTO_INCREMENT değeri `voyages`
---
-ALTER TABLE `voyages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'sefer kayıt numarası';
 
 --
 -- Dökümü yapılmış tablolar için kısıtlamalar
@@ -325,28 +322,16 @@ ALTER TABLE `voyages`
 -- Tablo kısıtlamaları `dated_voyage`
 --
 ALTER TABLE `dated_voyage`
-  ADD CONSTRAINT `dated_voyage_ibfk_1` FOREIGN KEY (`voyageId`) REFERENCES `voyages` (`id`);
-
---
--- Tablo kısıtlamaları `ferries`
---
-ALTER TABLE `ferries`
-  ADD CONSTRAINT `ferries_ibfk_1` FOREIGN KEY (`id`) REFERENCES `ferry_companies` (`id`),
-  ADD CONSTRAINT `ferries_ibfk_2` FOREIGN KEY (`routeId`) REFERENCES `route` (`id`);
-
---
--- Tablo kısıtlamaları `ferry_companies`
---
-ALTER TABLE `ferry_companies`
-  ADD CONSTRAINT `ferry_companies_ibfk_1` FOREIGN KEY (`ferryId`) REFERENCES `ferries` (`id`),
-  ADD CONSTRAINT `ferry_companies_ibfk_2` FOREIGN KEY (`id`) REFERENCES `ferries` (`id`);
+  ADD CONSTRAINT `dated_voyage_ibfk_1` FOREIGN KEY (`ferryId`) REFERENCES `ferries` (`id`),
+  ADD CONSTRAINT `dated_voyage_ibfk_2` FOREIGN KEY (`departurePointId`) REFERENCES `ports` (`id`),
+  ADD CONSTRAINT `dated_voyage_ibfk_3` FOREIGN KEY (`arrivalPointId`) REFERENCES `ports` (`id`);
 
 --
 -- Tablo kısıtlamaları `route`
 --
 ALTER TABLE `route`
-  ADD CONSTRAINT `route_ibfk_1` FOREIGN KEY (`tukeyPortId`) REFERENCES `turkey_port` (`id`),
-  ADD CONSTRAINT `route_ibfk_2` FOREIGN KEY (`greecePortId`) REFERENCES `greece_port` (`id`);
+  ADD CONSTRAINT `route_ibfk_2` FOREIGN KEY (`arrivalPortId`) REFERENCES `ports` (`id`),
+  ADD CONSTRAINT `route_ibfk_3` FOREIGN KEY (`departurePortId`) REFERENCES `ports` (`id`);
 
 --
 -- Tablo kısıtlamaları `sales`
@@ -354,12 +339,6 @@ ALTER TABLE `route`
 ALTER TABLE `sales`
   ADD CONSTRAINT `sales_ibfk_1` FOREIGN KEY (`memberId`) REFERENCES `member` (`id`),
   ADD CONSTRAINT `sales_ibfk_2` FOREIGN KEY (`datedVoyageId`) REFERENCES `dated_voyage` (`id`);
-
---
--- Tablo kısıtlamaları `voyages`
---
-ALTER TABLE `voyages`
-  ADD CONSTRAINT `voyages_ibfk_1` FOREIGN KEY (`ferryId`) REFERENCES `ferries` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
